@@ -3,6 +3,7 @@ import time
 import pygame
 from pygame import Surface
 
+
 class Player:
 
     def __init__(
@@ -23,18 +24,18 @@ class Player:
         self.sprite_base = pygame.transform.scale(self.sprite_base,
                                                   (int(self.sprite_base.get_width() * 0.6),
                                                    int(self.sprite_base.get_height() * 0.6))
-         )
+                                                  )
         sprite_width, sprite_height = self.sprite_base.get_width() // 4, self.sprite_base.get_height() // 2
         self.all_sprites = []
 
         self.lives = 5
         for row in range(1, 3):
             for column in range(4):
-                subsprite_size=pygame.Rect(
+                subsprite_size = pygame.Rect(
                     column * sprite_width,
                     sprite_height * (row - 1),
                     sprite_width,
-                    sprite_height * row
+                    sprite_height
                 )
                 print(subsprite_size)
                 print(self.sprite_base)
@@ -64,7 +65,12 @@ class Player:
             if self.angry_timer < time.time():
                 self.become_normal()
         self.screen.blit(self.sprite_to_display, self.position)
-        print("player", self.sprite_to_display.get_rect().x, self.sprite_to_display.get_rect().y)
+
+        # Drawin boxes
+        rect_to_draw = self.sprite_to_display.get_rect(center=self.position)
+        rect_to_draw.x += self.sprite_to_display.get_width() // 2
+        rect_to_draw.y += self.sprite_to_display.get_height() // 2
+        pygame.draw.rect(self.screen, 'white', rect_to_draw, 1)
         self.draw_fake_enemies()
 
     def move_up(self, delta_time):
@@ -88,10 +94,6 @@ class Player:
         self.position.x -= self.player_speed * delta_time
         if self.is_angry:
             self.sprite_to_display = self.all_sprites[7]
-
-
-
-
 
     def become_angry(self):
         if self.is_angry:

@@ -45,7 +45,7 @@ while running:
         game_manager.player.become_angry()
     if keys[pygame.K_SPACE]:
         game_manager.shoot()
-    game_manager.check_collision(dt)
+    game_manager.manager_loop(dt)
 
 
 
