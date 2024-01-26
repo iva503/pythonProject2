@@ -17,11 +17,13 @@ running = True
 dt = 0
 
 background = pygame.image.load("img_2.png")
-background = pygame.transform.scale(background,(1280, 720))
-game_manager=GameManager(screen)
+background = pygame.transform.scale(background, (1280, 720))
+game_manager = GameManager(screen)
 game_manager.initualize_game()
+
+clock.tick(60)
 while running:
-    screen.blit(background,(0,0))
+    screen.blit(background, (0, 0))
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -31,33 +33,13 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
 
     game_manager.player.reset_state()
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        game_manager.player.move_up(dt)
-    if keys[pygame.K_s]:
-        game_manager.player.move_down(dt)
-    if keys[pygame.K_a]:
-        game_manager.player.move_left(dt)
-    if keys[pygame.K_d]:
-        game_manager.player.move_right(dt)
+    game_manager.manager_loop()
 
-    if keys[pygame.K_r]:
-        game_manager.player.become_angry()
-    if keys[pygame.K_SPACE]:
-        game_manager.shoot()
-    game_manager.manager_loop(dt)
-
-
-
-    game_manager.player.draw()
     game_manager.show_score()
     pygame.display.flip()
 
     # limits FPS to 60
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
-    dt = clock.tick(60) / 1000
-
-
 
 pygame.quit()
