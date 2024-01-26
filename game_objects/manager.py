@@ -76,6 +76,7 @@ class GameManager:
 
     def manager_loop(self, dt):
         self.enemy_collision()
+        self.bullet_collision()
         self.check_shooting(dt)
 
         self.make_sure_theres_n_enemies(5)
@@ -89,3 +90,19 @@ class GameManager:
             self.shooting_frq = 0.25
         else:
             self.shooting_frq = 0.5
+
+    def bullet_collision(self):
+        for enemy in self.enemylist:
+            # Creating the masks
+            # Finding the positions for the mask offsets
+
+            enemy_rect = enemy.sprite_base.get_rect(topleft=enemy.position)
+            for bullet in self.bullets:
+                bullet_Rect = bullet.image.get_rect(topleft=bullet.position)
+            # Here we know that we are actually colliding
+                if bullet_Rect.colliderect(enemy_rect):
+                    print("Coliding")
+                    self.enemylist.remove(enemy)
+                    self.bullets.remove(bullet)
+
+

@@ -29,6 +29,7 @@ class Player:
         self.all_sprites = []
 
         self.lives = 5
+
         for row in range(1, 3):
             for column in range(4):
                 subsprite_size = pygame.Rect(
@@ -42,6 +43,9 @@ class Player:
                 subsprite = self.sprite_base.subsurface(subsprite_size)
                 self.all_sprites.append(subsprite)
         self.sprite_to_display = self.all_sprites[0]
+
+
+
 
     def reset_state(self):
         self.sprite_to_display = self.all_sprites[0]
