@@ -5,7 +5,7 @@ from game_objects.enemy import Enemy
 from game_objects.player import Player
 
 game_level_details = {
-    0: (2, 5),
+    0: (2, 5), # Enemy Speed and Count 2 is speed 5 is count
     1: (4, 5),
     2: (4, 7),
     3: (5, 8),

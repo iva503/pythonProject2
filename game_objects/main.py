@@ -21,7 +21,6 @@ background = pygame.transform.scale(background, (1280, 720))
 game_manager = GameManager(screen)
 game_manager.initualize_game()
 
-clock.tick(60)
 while running:
     screen.blit(background, (0, 0))
     # poll for events
@@ -36,6 +35,8 @@ while running:
     pygame.display.flip()
 
     # limits FPS to 60
+
+    clock.tick(60)
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
 
