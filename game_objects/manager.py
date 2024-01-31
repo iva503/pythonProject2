@@ -4,6 +4,13 @@ from game_objects.bullet import Bullet
 from game_objects.enemy import Enemy
 from game_objects.player import Player
 
+game_level_details = {
+    0: (2, 5),
+    1: (4, 5),
+    2: (4, 7),
+    3: (5, 8),
+}
+
 
 class GameManager:
     def __init__(self, screen, ):
@@ -19,12 +26,19 @@ class GameManager:
         self.next_shot = self.shooting_frq
         self.is_paused = False
 
+        self.level = 0
+
+        speed, count = game_level_details[self.level]
+        self.enemy_count = count
+        self.enemy_speed = speed
 
     def initualize_game(self):
-        self.make_sure_theres_n_enemies(5)
+        self.level = 0
+        self.make_sure_theres_n_enemies()
         self.player.lives = 5
         self.score = 0
         self.player.rect.center = pygame.Vector2(self.screen.get_width() / 2, self.screen.get_height() - 100)
+
     def shoot(self):
         if self.allowed_to_shoot:
             self.bullets_group.add(
@@ -33,13 +47,13 @@ class GameManager:
             self.allowed_to_shoot = False
             self.next_shot = pygame.time.get_ticks() + 500
 
-
-    def make_sure_theres_n_enemies(self, n):
+    def make_sure_theres_n_enemies(self):
         current_lenth_of_enemis = len(self.enemies_group.sprites())
-        if n == current_lenth_of_enemis:
+        n = self.enemy_count
+        if current_lenth_of_enemis > n:
             return
         for a in range(n - current_lenth_of_enemis):
-            self.enemies_group.add(Enemy(self.screen))
+            self.enemies_group.add(Enemy(self.screen, self.enemy_speed))
 
     def enemy_killed(self):
         self.score += 5
@@ -65,7 +79,7 @@ class GameManager:
             textRect = text.get_rect()
             textRect.center = (self.screen.get_width() // 2, self.screen.get_height() // 2)
             self.screen.blit(text, textRect)
-        if self.player.lives ==  0:
+        if self.player.lives == 0:
             font = pygame.font.Font('freesansbold.ttf', 40)
             text = font.render('game over, press enter to restart', True, 'red', 'black')
             textRect = text.get_rect()
@@ -79,6 +93,7 @@ class GameManager:
                 self.allowed_to_shoot = True
 
     def manager_loop(self):
+        self.update_based_on_level()
         keys = pygame.key.get_pressed()
         if self.player.lives == 0:
             if keys[pygame.K_RETURN]:
@@ -100,13 +115,13 @@ class GameManager:
 
             self.check_shooting()
 
-            self.make_sure_theres_n_enemies(5)
+            self.make_sure_theres_n_enemies()
 
             self.player_group.update()
             self.enemies_group.update()
             self.bullets_group.update()
 
-         # Draw eve`rything else
+        # Draw eve`rything else
         self.enemies_group.draw(self.screen)
         self.bullets_group.draw(self.screen)
 
@@ -114,13 +129,9 @@ class GameManager:
         self.player_group.draw(self.screen)
 
         if self.player.is_angry:
-                self.shooting_frq = 0.25
+            self.shooting_frq = 0.25
         else:
             self.shooting_frq = 0.5
-
-
-
-
 
     def bullet_collision(self):
         for bullet in self.bullets_group.sprites():
@@ -131,3 +142,16 @@ class GameManager:
     def enemy_collision(self):
         if pygame.sprite.spritecollide(self.player, self.enemies_group, True, pygame.sprite.collide_mask):
             self.player.lives -= 1
+
+    def update_based_on_level(self):
+        self.level = 0
+        if self.score > 30:
+            self.level = 1
+        if self.score > 60:
+            self.level = 2
+        if self.score > 100:
+            self.level = 3
+
+        speed, count = game_level_details[self.level]
+        self.enemy_count = count
+        self.enemy_speed = speed

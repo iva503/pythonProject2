@@ -30,9 +30,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # fill the screen with a color to wipe away anything from last frame
-
-    game_manager.player.reset_state()
     game_manager.manager_loop()
 
     game_manager.show_score()
